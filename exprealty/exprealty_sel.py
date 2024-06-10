@@ -71,16 +71,18 @@ def main():
   agents_count = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.CLASS_NAME, 'Agents_count__r8DES'))
   )
-  print(f'This URL has {agents_count.text.split(' ')[0]} agents.')
-  # page_num = math.ceil(item_num / 24)
+  print(f'This URL has {agents_count.text.split(" ")[0]} agents.')
   page_num = 1
   while True:
     print(f'{page_num} page scraped')
     page_url = identified_url + f'&page={page_num}'
     driver.get(page_url)
-    element = WebDriverWait(driver, 10).until(
-      EC.presence_of_element_located((By.CSS_SELECTOR, '[data-test="name"]'))
-    )
+    try:
+      element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-test="name"]'))
+      )
+    except:
+      break
     page_items = driver.find_element(By.CLASS_NAME, 'Agents_grid___eZGt').find_elements(By.TAG_NAME, 'a')
     for page_item in page_items:
       name = page_item.find_element(By.CSS_SELECTOR, '[data-test="name"]').text
@@ -102,12 +104,12 @@ def main():
     else:
       page_num += 1
   add_header()
-  remove_duplications()
+  # remove_duplications()
   print(f'The result saved as "{output_file_name}" in "{output_directory}" folder.')
 
 if __name__ == "__main__":
-  input_url = 'https://exprealty.com/agents/?page=1&country=US&location=NY'
-  output_file_name = 'NY.csv'
+  input_url = 'https://exprealty.com/agents/?page=1&country=US&location=CA'
+  output_file_name = 'CA1.csv'
   output_directory = 'output'
   file_path = os.path.join(output_directory, output_file_name)
 
